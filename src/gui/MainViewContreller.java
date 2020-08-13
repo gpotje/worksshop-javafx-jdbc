@@ -29,7 +29,7 @@ public class MainViewContreller implements Initializable {
 		System.out.println("onMenuItemSellerAction");
 	}
 	public void onMenuItemDepartamentoAction() {
-		System.out.println("onMenuItemDepartamentoAction");
+		loadView("/gui/DepartmentList.fxml");
 	}
 	public void onMenuItemAboutAction() {
 		loadView("/gui/About.fxml");

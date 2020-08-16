@@ -2,9 +2,12 @@ package gui;
 
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listteners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -26,6 +29,8 @@ public class DepartmentFormController implements Initializable {
 	
 	private DepartmentService service;
 	
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+	
 	@FXML
 	private TextField txtId;
 	@FXML
@@ -43,6 +48,9 @@ public class DepartmentFormController implements Initializable {
 	public void setDepartmentservice(DepartmentService service) {
 		this.service = service ;
 	}
+	public void subcribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
+	}
 	
 	
 	@FXML
@@ -57,6 +65,7 @@ public class DepartmentFormController implements Initializable {
 		try {
 			entity = getFormData();
 			service.saveOrUpdate(entity);
+			notifyDataChangeListener();
 			Utils.currentStage(event).close();
 		}catch(DbException e){
 			Alerts.showAlert("Error", null, e.getMessage(), AlertType.ERROR);
@@ -66,6 +75,12 @@ public class DepartmentFormController implements Initializable {
 		
 	}
 	
+	private void notifyDataChangeListener() {
+		for(DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChange();
+		}
+		
+	}
 	private Department getFormData() {
 		Department obj = new Department();
 		
